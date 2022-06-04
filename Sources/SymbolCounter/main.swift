@@ -3,7 +3,7 @@ import Foundation
 
 struct SymbolCount: ParsableCommand {
 
-  @Argument(help: "The folder path of Swift source files")
+  @Argument(help: "The folder path of source files. Folder is traversed recursively.")
   var path: String
 
   @Option(name: .shortAndLong ,help: "All symbols you want to count")
@@ -11,8 +11,11 @@ struct SymbolCount: ParsableCommand {
   '<>".!+-=_^/*\\#&@[]%;|?():,${}~`
   """
 
+  @Option(name: .shortAndLong ,help: "The filename extension filter of the source files to count")
+  var fileExtension: String = "swift"
+
   static let configuration = CommandConfiguration(
-    abstract: "A Swift command-line tool to count symbols in Swift source files",
+    abstract: "A Swift command-line tool to count symbols in source files",
     subcommands: []
   )
 
@@ -32,7 +35,7 @@ struct SymbolCount: ParsableCommand {
         for case let fileURL as URL in enumerator {
           do {
             let fileAttributes = try fileURL.resourceValues(forKeys: [.isRegularFileKey])
-            if fileAttributes.isRegularFile!, fileURL.pathExtension == "swift" {
+            if fileAttributes.isRegularFile!, fileURL.pathExtension == fileExtension {
               files.append(fileURL)
             }
           } catch { print(error, fileURL) }
