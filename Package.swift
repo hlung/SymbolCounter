@@ -5,6 +5,9 @@ import PackageDescription
 
 let package = Package(
     name: "SymbolCounter",
+    products: [
+      .executable(name: "symbol-counter", targets: ["SymbolCounter"])
+    ],
     dependencies: [
         // Dependencies declare other packages that this package depends on.
       .package(url: "https://github.com/apple/swift-argument-parser.git", .upToNextMajor(from: "1.1.2"))
