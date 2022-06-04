@@ -3,8 +3,16 @@ import Foundation
 
 struct SymbolCount: ParsableCommand {
 
+  @Argument(help: "The folder path of Swift source files")
+  var path: String
+
+  @Option(name: .shortAndLong ,help: "All symbols you want to count")
+  var symbols: String = """
+  '<>".!+-=_^/*\\#&@[]%;|?():,${}~`
+  """
+
   static let configuration = CommandConfiguration(
-    abstract: "A Swift command-line tool to count symbols in source files",
+    abstract: "A Swift command-line tool to count symbols in Swift source files",
     subcommands: []
   )
 
@@ -12,13 +20,7 @@ struct SymbolCount: ParsableCommand {
 
   func run() throws {
     do {
-      // Set the url of the folder you want to count here:
-      let folderURL = URL(fileURLWithPath: "/Users/thongchai.kolyutsaku/Downloads/RxSwift-main")
-
-      // Set symbols you want to count here:
-      let symbols = """
-      '<>".!+-=_^/*\\#&@[]%;|?():,${}~`
-      """
+      let folderURL = URL(fileURLWithPath: path)
 
       var files = [URL]()
       if let enumerator = FileManager.default.enumerator(
@@ -78,13 +80,13 @@ struct SymbolCount: ParsableCommand {
       }
       print()
 
-      print("Adjacent symbols count")
+      print("Adjacent symbols count (top 50)")
       for f in adjacentFrequencies
             .filter({ $0.key.count == 2 })
             .sorted(by: { $0.value > $1.value })
             .prefix(50)
       {
-        print("'", terminator: "") // add single quote so when pasting in google sheets it doesn't process as a formula
+        print("'", terminator: "")
         print(f.key.map { String($0) }.joined(), f.value)
       }
 
