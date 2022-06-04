@@ -78,7 +78,8 @@ struct SymbolCount: ParsableCommand {
 
       print("Symbols count")
       for f in frequencies.sorted(by: { $0.value > $1.value }) {
-        print("'", terminator: "") // add single quote so when pasting in google sheets it doesn't process as a formula
+        // A single quote is added so google sheets doesn't process it as a formula.
+        print("'", terminator: "")
         print(f.key, f.value)
       }
       print()
